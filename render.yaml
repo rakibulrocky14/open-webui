@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: open-webui
+    runtime: python
+    region: oregon
+    plan: starter
+    buildCommand: |
+      # Install Node.js dependencies and build frontend
+      npm install
+      npm run build
+      # Install Python dependencies
+      cd backend
+      pip install -r requirements.txt
+    startCommand: |
+      # Start the application with proper port binding
+      python start_render.py
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: UVICORN_WORKERS
+        value: 1
+      - key: WEBUI_SECRET_KEY
+        generateValue: true
+    healthCheckPath: /health
